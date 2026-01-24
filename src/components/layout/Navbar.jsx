@@ -1,8 +1,15 @@
 import { useState } from "react";
-import {Link} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../redux/slices/authSlice";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { isAuthenticated, role } = useSelector((state) => state.auth);
 
   const handleScroll = (id) => {
     setOpen(false);
@@ -10,6 +17,17 @@ export default function Navbar() {
       behavior: "smooth",
     });
   };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    setOpen(false);
+    navigate("/");
+  };
+
+  const dashboardPath =
+    role === "FARMER" || role === "ROLE_FARMER"
+      ? "/farmer/dashboard"
+      : "/owner/dashboard";
 
   return (
     <nav className="absolute top-0 left-0 w-full z-30">
@@ -54,13 +72,33 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Desktop CTA */}
-        <Link
-          to="/auth"
-          className="hidden md:inline-block bg-green-600 hover:bg-green-700 transition px-6 py-3 rounded-full font-semibold"
-        >
-          Get Started Now →
-        </Link>
+        {/* Desktop Right Side */}
+        <div className="hidden md:flex items-center gap-4">
+          {!isAuthenticated ? (
+            <Link
+              to="/auth"
+              className="bg-green-600 hover:bg-green-700 transition px-6 py-3 rounded-full font-semibold"
+            >
+              Get Started Now →
+            </Link>
+          ) : (
+            <>
+              <Link
+                to={dashboardPath}
+                className="border border-yellow-400 text-yellow-300 px-5 py-2 rounded-full font-medium hover:bg-yellow-400 hover:text-black transition"
+              >
+                Dashboard
+              </Link>
+
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 hover:bg-red-600 px-5 py-2 rounded-full font-semibold transition"
+              >
+                Logout
+              </button>
+            </>
+          )}
+        </div>
 
         {/* Mobile Menu Button */}
         <button
@@ -102,12 +140,32 @@ export default function Navbar() {
             Shop
           </button>
 
-          <Link
-            to="/auth"
-            className="inline-block mt-4 bg-green-600 hover:bg-green-700 transition px-6 py-3 rounded-full font-semibold"
-          >
-            Get Started Now →
-          </Link>
+          {!isAuthenticated ? (
+            <Link
+              to="/auth"
+              onClick={() => setOpen(false)}
+              className="inline-block mt-4 bg-green-600 hover:bg-green-700 transition px-6 py-3 rounded-full font-semibold"
+            >
+              Get Started Now →
+            </Link>
+          ) : (
+            <>
+              <Link
+                to={dashboardPath}
+                onClick={() => setOpen(false)}
+                className="block text-center border border-yellow-400 text-yellow-300 px-6 py-3 rounded-full font-semibold"
+              >
+                Dashboard
+              </Link>
+
+              <button
+                onClick={handleLogout}
+                className="w-full bg-red-500 hover:bg-red-600 px-6 py-3 rounded-full font-semibold transition"
+              >
+                Logout
+              </button>
+            </>
+          )}
         </div>
       )}
     </nav>
