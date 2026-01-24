@@ -48,7 +48,7 @@ export default function Register() {
     e.preventDefault();
 
     try {
-      await api.post("/api/auth/register", form);
+      await api.post("/auth/register", form);
       alert("Registration successful! Please login.");
       navigate("/auth");
     } catch (err) {
