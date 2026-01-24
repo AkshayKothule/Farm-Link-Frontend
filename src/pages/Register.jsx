@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
+import StateDropdown from "../components/common/StateDropdown";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ export default function Register() {
     e.preventDefault();
 
     try {
-      await api.post("/auth/register", form);
+      await api.post("/api/auth/register", form);
       alert("Registration successful! Please login.");
       navigate("/auth");
     } catch (err) {
@@ -97,7 +98,7 @@ export default function Register() {
         className="w-full border px-4 py-2 rounded-lg"
       />
 
-      {/* ===== PASSWORD WITH SHOW/HIDE ===== */}
+      {/* ===== PASSWORD (INDUSTRY STANDARD) ===== */}
       <div className="relative">
         <input
           type={showPassword ? "text" : "password"}
@@ -165,7 +166,7 @@ export default function Register() {
       <select
         name="role"
         onChange={handleChange}
-        className="w-full border px-4 py-2 rounded-lg"
+        className="w-full border px-4 py-2 rounded-lg bg-white"
       >
         <option value="FARMER">Farmer</option>
         <option value="OWNER">Equipment Owner</option>
@@ -208,13 +209,21 @@ export default function Register() {
         className="w-full border px-4 py-2 rounded-lg"
       />
 
-      <input
-        name="state"
-        placeholder="State"
-        required
-        onChange={handleChange}
-        className="w-full border px-4 py-2 rounded-lg"
-      />
+      {/* ===== STATE DROPDOWN ===== */}
+   <StateDropdown
+  value={form.addressDto.state}
+  onChange={(state) =>
+    setForm({
+      ...form,
+      addressDto: {
+        ...form.addressDto,
+        state,
+      },
+    })
+  }
+/>
+
+
 
       <input
         name="pincode"
