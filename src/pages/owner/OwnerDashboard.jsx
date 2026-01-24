@@ -1,9 +1,19 @@
+import OwnerLayout from "./OwnerLayout";
+import OwnerStats from "./OwnerStats";
+import OwnerRentals from "./OwnerRentals";
+
 export default function OwnerDashboard() {
   return (
-    <div className="min-h-screen bg-green-50 flex items-center justify-center">
-      <h1 className="text-3xl font-bold text-green-700">
-        🚜 Owner Dashboard
+    <OwnerLayout>
+      <h1 className="text-2xl font-bold text-green-900">
+        Owner Dashboard
       </h1>
-    </div>
+      <p className="text-gray-600 mb-6">
+        Manage your equipments and rental requests
+      </p>
+
+      <OwnerStats />
+      <OwnerRentals />
+    </OwnerLayout>
   );
 }
