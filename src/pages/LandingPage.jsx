@@ -43,12 +43,10 @@ export default function LandingPage() {
             </span>
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">
-              Organic Farming <br /> and Agriculture
-            </h1>
+            Powering Farms with Modern Equipment            </h1>
 
             <p className="mt-6 text-lg text-gray-200 leading-relaxed">
-              Smart solutions for modern farming. Grow naturally,
-              sustainably and profitably.
+              Rent modern farming equipment when you need it — affordable, easy, and reliable.
             </p>
 
             <div className="mt-10 flex flex-wrap gap-4">
@@ -60,15 +58,15 @@ export default function LandingPage() {
                 }
                 className="bg-green-600 px-8 py-4 rounded-full font-semibold transition hover:scale-105 hover:bg-green-700"
               >
-                Discover More →
+           Explore Equipment →           
               </button>
 
               <Link
                 to="/auth"
                 className="border border-yellow-400 text-yellow-300 px-8 py-4 rounded-full transition hover:bg-yellow-400 hover:text-black"
               >
-                Get Started Now →
-              </Link>
+          Start Renting Now →            
+         </Link>
             </div>
           </div>
         </div>
@@ -85,11 +83,9 @@ export default function LandingPage() {
 
           <div className="animate-fade-in">
             <h2 className="text-3xl font-bold mb-4">
-              Healthy Foods for Better Life
-            </h2>
+            Smart Farming for a Better Tomorrow            </h2>
             <p className="text-lg text-gray-600 leading-relaxed">
-              We promote sustainable agriculture by providing eco-friendly
-              farming solutions that increase yield and reduce cost.
+              FarmLink connects farmers and equipment owners on one platform, enabling affordable access to modern farming tools and supporting smarter, more sustainable agriculture.
             </p>
           </div>
         </div>
