@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../redux/slices/authSlice";
 import api from "../services/api";
 
 export default function Login() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [form, setForm] = useState({
     email: "",
@@ -23,13 +26,19 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const res = await api.post("/auth/login", form);
+      const res = await api.post("/api/auth/login", form);
 
       const { token, role } = res.data;
 
-      localStorage.setItem("token", token);
-      localStorage.setItem("role", role);
+      // ✅ Redux state update (also persists to localStorage)
+      dispatch(
+        loginSuccess({
+          token,
+          role,
+        })
+      );
 
+      // 🚦 Role based navigation
       if (role === "FARMER" || role === "ROLE_FARMER") {
         navigate("/farmer/dashboard");
       } else if (role === "OWNER" || role === "ROLE_OWNER") {
