@@ -40,9 +40,9 @@ export default function Login() {
 
       // 🚦 Role based navigation
       if (role === "FARMER" || role === "ROLE_FARMER") {
-        navigate("/farmer/dashboard");
+        navigate("/farmer");
       } else if (role === "OWNER" || role === "ROLE_OWNER") {
-        navigate("/owner/dashboard");
+        navigate("/owner");
       } else {
         alert("Unknown role");
       }
