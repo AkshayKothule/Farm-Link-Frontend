@@ -10,7 +10,9 @@ import BrowseEquipments from "./pages/farmer/BrowseEquipments";
 import FarmerProfile from "./pages/farmer/FarmerProfile";
 
 import OwnerDashboard from "./pages/owner/OwnerDashboard";
-
+import OwnerLayout  from "./pages/owner/OwnerLayout"
+import MyEquipments from "./pages/owner/MyEquipments"
+import OwnerProfile from "./pages/owner/OwnerProfile"
 function App() {
   const { isAuthenticated, role } = useSelector((state) => state.auth);
 
@@ -37,10 +39,11 @@ function App() {
       </Route>
 
       {/* OWNER */}
-      <Route
-        path="/owner/dashboard"
-        element={isOwner ? <OwnerDashboard /> : <Navigate to="/auth" />}
-      />
+      <Route path="/owner" element={<OwnerLayout />}>
+        <Route path="dashboard" element={<OwnerDashboard />} />
+        <Route path="equipments" element={<MyEquipments />} />
+        <Route path="profile" element={<OwnerProfile />} />
+      </Route>
     </Routes>
   );
 }

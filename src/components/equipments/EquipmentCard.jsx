@@ -1,69 +1,53 @@
-import { useState } from "react";
-import RentalRequestModal from "../modals/RentalRequestModal";
-
-export default function EquipmentCard({ equipment }) {
-  const [open, setOpen] = useState(false);
-
+export default function EquipmentCard({
+  equipment,
+  isOwner,
+  onDelete,
+  onToggleAvailability
+}) {
   return (
-    <>
-      <div
-        className="
-          bg-white rounded-2xl shadow
-          hover:shadow-xl hover:-translate-y-1
-          transition-all duration-300
-          p-5 flex flex-col
-        "
-      >
-        {/* IMAGE */}
-        <img
-          src={equipment.imageUrl || "/placeholder-equipment.jpg"}
-          alt={equipment.name}
-          className="h-40 w-full object-cover rounded-xl mb-4"
-        />
+    <div className="bg-white p-4 rounded shadow">
 
-        {/* DETAILS */}
-        <h3 className="text-lg font-semibold text-green-900">
-          {equipment.name}
-        </h3>
+      <img
+        src={equipment.imageUrl}
+        alt={equipment.name}
+        className="h-40 w-full object-cover rounded mb-3"
+      />
 
-        <p className="text-sm text-gray-500">
-          Category: {equipment.category}
-        </p>
+      <h3 className="font-semibold">{equipment.name}</h3>
+      <p className="text-sm text-gray-500">
+        {equipment.category}
+      </p>
 
-        <p className="text-sm text-gray-600 mt-2 line-clamp-2">
-          {equipment.description || "No description available"}
-        </p>
+      <p className="mt-1">
+        ₹ {equipment.rentPerDay} / day
+      </p>
 
-        <div className="mt-3 font-semibold text-green-700">
-          ₹ {equipment.rentPerDay} / day
-        </div>
+      {isOwner && (
+        <>
+          <p className="mt-2 text-sm">
+            Status:{" "}
+            <b className={equipment.available ? "text-green-600" : "text-red-600"}>
+              {equipment.available ? "Available" : "Unavailable"}
+            </b>
+          </p>
 
-        {/* ACTION */}
-        <button
-          disabled={equipment.available === false}
-          onClick={() => !open && setOpen(true)}
-          className={`
-            mt-auto py-2 rounded-lg font-semibold transition
-            ${
-              equipment.available === false
-                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-green-600 text-white hover:bg-green-700"
-            }
-          `}
-        >
-          {equipment.available === false
-            ? "Not Available"
-            : "Request Rental"}
-        </button>
-      </div>
+          <div className="flex gap-2 mt-3">
+            <button
+              onClick={onToggleAvailability}
+              className="px-3 py-1 text-sm rounded bg-blue-600 text-white"
+            >
+              Toggle Availability
+            </button>
 
-      {/* MODAL */}
-      {open && (
-        <RentalRequestModal
-          equipment={equipment}
-          onClose={() => setOpen(false)}
-        />
+            <button
+              onClick={onDelete}
+              className="px-3 py-1 text-sm rounded bg-red-600 text-white"
+            >
+              Delete
+            </button>
+          </div>
+        </>
       )}
-    </>
+    </div>
   );
 }
