@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../../services/api";
-import RentalCard from "../../components/common/RentalCard";
+import FarmerRentalCard from "../../components/common/FarmerRentalCard";
 import PaymentModal from "../../components/modals/PaymentModal";
 import { errorToast } from "../../utils/toast";
 
@@ -12,12 +12,19 @@ export default function MyRentals() {
   const [selectedRental, setSelectedRental] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
+  // ================= LOAD FARMER RENTALS =================
   const loadRentals = () => {
     setLoading(true);
+
     api.get("/rentals/farmer")
       .then(res => {
-        setRentals(res.data || []);
-        setCurrentPage(1); // reset page after reload
+        setRentals(Array.isArray(res.data) ? res.data : []);
+        setCurrentPage(1);
+      })
+      .catch(err => {
+        console.error("Failed to load farmer rentals", err);
+        errorToast(err.response?.data || "Failed to load rentals");
+        setRentals([]);
       })
       .finally(() => setLoading(false));
   };
@@ -26,16 +33,11 @@ export default function MyRentals() {
     loadRentals();
   }, []);
 
-  const cancelRental = (id) => {
-    if (!window.confirm("Cancel this rental request?")) return;
-
-    api.delete(`/rentals/farmer/${id}`)
-      .then(() => loadRentals())
-      .catch(err => errorToast(err.response?.data || "Failed to cancel"));
-  };
-
   // ================= PAGINATION =================
-  const totalPages = Math.ceil(rentals.length / ITEMS_PER_PAGE);
+  const totalPages = Math.max(
+    1,
+    Math.ceil(rentals.length / ITEMS_PER_PAGE)
+  );
 
   const paginatedRentals = rentals.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
@@ -54,6 +56,7 @@ export default function MyRentals() {
     }
   };
 
+  // ================= UI =================
   if (loading) {
     return (
       <p className="text-green-700 font-semibold">
@@ -69,16 +72,18 @@ export default function MyRentals() {
       </h1>
 
       {rentals.length === 0 ? (
-        <p className="text-gray-500">No rental requests yet.</p>
+        <p className="text-gray-500">
+          No rental requests yet.
+        </p>
       ) : (
         <>
           {/* RENTAL LIST */}
           <div className="space-y-4">
             {paginatedRentals.map(rental => (
-              <RentalCard
-                key={rental.rentalId}
+              <FarmerRentalCard
+                key={rental.rentalId || rental.id}
                 rental={rental}
-                onCancel={cancelRental}
+                onCancel={loadRentals}
                 onPay={() => setSelectedRental(rental)}
               />
             ))}

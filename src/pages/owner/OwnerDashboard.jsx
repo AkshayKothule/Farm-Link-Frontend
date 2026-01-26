@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardCard from "../../components/common/DashboardCard";
-import RentalCard from "../../components/common/RentalCard";
+import RentalCard from "../../components/common/FarmerRentalCard";
 import { getOwnerRentals } from "../../services/ownerService";
 
 export default function OwnerDashboard() {

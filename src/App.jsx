@@ -8,7 +8,7 @@ import FarmerLayout from "./pages/farmer/FarmerLayout";
 import FarmerDashboard from "./pages/farmer/FarmerDashboard";
 import BrowseEquipments from "./pages/farmer/BrowseEquipments";
 import FarmerProfile from "./pages/farmer/FarmerProfile";
-import MyRentals from "./pages/owner/OwnerRentals.jsx";
+import MyRentals from "./pages/farmer/MyRentals.jsx";
 import PaymentHistory from "./pages/farmer/PaymentHistory";
 import Settings from "./pages/farmer/Settings.jsx";
 
