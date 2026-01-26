@@ -4,10 +4,10 @@ import {
   deleteEquipment,
 } from "../../services/equipmentService";
 import AddEquipmentModal from "../../components/modals/AddEquipmentModal";
-import { toast } from "react-toastify";
-import { errorToast } from "../../utils/toast";
+import { errorToast, successToast } from "../../utils/toast";
 
 const ITEMS_PER_PAGE = 6;
+const PLACEHOLDER = "/placeholder-equipment.jpg";
 
 export default function MyEquipments() {
   const [equipments, setEquipments] = useState([]);
@@ -21,11 +21,12 @@ export default function MyEquipments() {
 
   const loadEquipments = async () => {
     try {
+      setLoading(true);
       const res = await getMyEquipments();
       setEquipments(res.data || []);
-      setCurrentPage(1); // reset page after reload
+      setCurrentPage(1);
     } catch (err) {
-      console.error("Failed to load equipments", err);
+      errorToast("Failed to load equipments");
     } finally {
       setLoading(false);
     }
@@ -36,17 +37,17 @@ export default function MyEquipments() {
 
     try {
       await deleteEquipment(id);
+      successToast("Equipment removed");
       loadEquipments();
     } catch (err) {
-      const message =
+      errorToast(
         err.response?.data?.message ||
-        err.response?.data ||
-        "Cannot delete equipment";
-      errorToast(message);
+        "Cannot delete equipment"
+      );
     }
   };
 
-  // ✅ ONLY AVAILABLE EQUIPMENTS
+  // ✅ show only available
   const availableEquipments = equipments.filter(eq => eq.available);
 
   // ================= PAGINATION =================
@@ -58,14 +59,6 @@ export default function MyEquipments() {
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
-
-  const nextPage = () => {
-    if (currentPage < totalPages) setCurrentPage(p => p + 1);
-  };
-
-  const prevPage = () => {
-    if (currentPage > 1) setCurrentPage(p => p - 1);
-  };
 
   return (
     <div>
@@ -102,41 +95,63 @@ export default function MyEquipments() {
             {paginatedEquipments.map(eq => (
               <div
                 key={eq.id}
-                className="bg-white rounded-2xl shadow p-5 flex flex-col"
+                className="bg-white rounded-2xl shadow overflow-hidden flex flex-col"
               >
-                <h3 className="text-lg font-semibold text-green-900">
-                  {eq.name}
-                </h3>
+                {/* IMAGE */}
+                <div className="h-40 bg-gray-100 relative">
+                  <img
+                    src={
+                      eq.imageUrls?.length > 0
+                        ? eq.imageUrls[0]
+                        : PLACEHOLDER
+                    }
+                    alt={eq.name}
+                    className="w-full h-full object-cover"
+                  />
 
-                <p className="text-sm text-gray-500">
-                  Category: {eq.category}
-                </p>
+                  {eq.imageUrls?.length > 1 && (
+                    <span className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded">
+                      +{eq.imageUrls.length - 1}
+                    </span>
+                  )}
+                </div>
 
-                <p className="mt-2 font-semibold text-green-700">
-                  ₹ {eq.rentPerDay} / day
-                </p>
+                {/* CONTENT */}
+                <div className="p-5 flex flex-col flex-1">
+                  <h3 className="text-lg font-semibold text-green-900">
+                    {eq.name}
+                  </h3>
 
-                <span className="mt-3 inline-block text-xs font-semibold px-3 py-1 rounded-full bg-green-100 text-green-700 w-fit">
-                  Available
-                </span>
+                  <p className="text-sm text-gray-500">
+                    Category: {eq.category}
+                  </p>
 
-                <button
-                  onClick={() => handleDelete(eq.id)}
-                  className="mt-auto bg-red-600 text-white rounded-lg py-2 text-sm font-semibold hover:bg-red-700 mt-5"
-                >
-                  Delete
-                </button>
+                  <p className="mt-2 font-semibold text-green-700">
+                    ₹ {eq.rentPerDay} / day
+                  </p>
+
+                  <span className="mt-3 inline-block text-xs font-semibold px-3 py-1 rounded-full bg-green-100 text-green-700 w-fit">
+                    Available
+                  </span>
+
+                  <button
+                    onClick={() => handleDelete(eq.id)}
+                    className="mt-auto bg-red-600 text-white rounded-lg py-2 text-sm font-semibold hover:bg-red-700 mt-5"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             ))}
           </div>
 
-          {/* PAGINATION CONTROLS */}
+          {/* PAGINATION */}
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-4 mt-10">
               <button
-                onClick={prevPage}
+                onClick={() => setCurrentPage(p => p - 1)}
                 disabled={currentPage === 1}
-                className="px-4 py-2 border rounded-lg text-sm font-semibold bg-white disabled:opacity-50"
+                className="px-4 py-2 border rounded-lg bg-white disabled:opacity-50"
               >
                 ← Previous
               </button>
@@ -146,9 +161,9 @@ export default function MyEquipments() {
               </span>
 
               <button
-                onClick={nextPage}
+                onClick={() => setCurrentPage(p => p + 1)}
                 disabled={currentPage === totalPages}
-                className="px-4 py-2 border rounded-lg text-sm font-semibold bg-white disabled:opacity-50"
+                className="px-4 py-2 border rounded-lg bg-white disabled:opacity-50"
               >
                 Next →
               </button>
@@ -161,10 +176,7 @@ export default function MyEquipments() {
       {showAddModal && (
         <AddEquipmentModal
           onClose={() => setShowAddModal(false)}
-          onSuccess={() => {
-            setShowAddModal(false);
-            loadEquipments();
-          }}
+          onSuccess={loadEquipments}
         />
       )}
     </div>
