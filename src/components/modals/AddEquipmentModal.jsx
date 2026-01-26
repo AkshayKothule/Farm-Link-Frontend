@@ -7,32 +7,71 @@ export default function AddEquipmentModal({ onClose, onSuccess }) {
     name: "",
     category: "",
     rentPerDay: "",
-    description: ""
+    description: "",
   });
 
+  const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+
+    if (files.length > 5) {
+      errorToast("Maximum 5 images allowed");
+      return;
+    }
+
+    setImages(files);
+  };
+
   const handleSubmit = async () => {
     if (!form.name || !form.category || !form.rentPerDay) {
-      alert("Please fill all required fields");
+      errorToast("Please fill all required fields");
       return;
     }
 
     try {
       setLoading(true);
-      await api.post("/owners/equipments", {
-        ...form,
-        rentPerDay: Number(form.rentPerDay)
+
+      const formData = new FormData();
+
+      // 🔹 DTO as JSON blob
+      formData.append(
+        "data",
+        new Blob(
+          [
+            JSON.stringify({
+              ...form,
+              rentPerDay: Number(form.rentPerDay),
+            }),
+          ],
+          { type: "application/json" }
+        )
+      );
+
+      // 🔹 Optional images
+      images.forEach((img) => {
+        formData.append("images", img);
       });
 
-      successToast("✅ Equipment added successfully");
+      await api.post("/owners/equipments", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      successToast("🚜 Equipment added successfully");
       onSuccess();
+      onClose();
+
     } catch (err) {
-      errorToast(err.response?.data?.message || "Failed to add equipment");
+      errorToast(
+        err.response?.data?.message || "Failed to add equipment"
+      );
     } finally {
       setLoading(false);
     }
@@ -83,6 +122,21 @@ export default function AddEquipmentModal({ onClose, onSuccess }) {
               onChange={handleChange}
               className="w-full border px-4 py-2 rounded-lg"
             />
+
+            {/* 📸 IMAGES (OPTIONAL) */}
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={handleImageChange}
+              className="w-full text-sm"
+            />
+
+            {images.length > 0 && (
+              <p className="text-xs text-gray-500">
+                {images.length} image(s) selected
+              </p>
+            )}
           </div>
 
           <div className="flex gap-3 mt-6">
