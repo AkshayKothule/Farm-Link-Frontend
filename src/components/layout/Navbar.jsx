@@ -26,8 +26,8 @@ export default function Navbar() {
 
   const dashboardPath =
     role === "FARMER" || role === "ROLE_FARMER"
-      ? "/farmer/dashboard"
-      : "/owner/dashboard";
+      ? "/farmer"
+      : "/owner";
 
   return (
     <nav className="absolute top-0 left-0 w-full z-30">

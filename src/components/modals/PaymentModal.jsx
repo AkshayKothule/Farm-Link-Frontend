@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "../../services/api";
+import { errorToast } from "../../utils/toast";
 
 export default function PaymentModal({ rental, onClose, onSuccess }) {
   const [loading, setLoading] = useState(false);
@@ -48,14 +49,14 @@ export default function PaymentModal({ rental, onClose, onSuccess }) {
 
       // Optional: explicit failure handling
       rzp.on("payment.failed", function () {
-        alert("Payment failed or cancelled");
+        errorToast("Payment failed or cancelled");
         setLoading(false);
       });
 
       rzp.open();
     } catch (err) {
       console.error(err);
-      alert(err.response?.data || "Payment initiation failed");
+      errorToast(err.response?.data || "Payment initiation failed");
       setLoading(false);
     }
   };

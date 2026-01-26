@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "../../services/api";
+import { errorToast } from "../../utils/toast";
 
 export default function EditFarmerProfileModal({ profile, onClose, onSuccess }) {
   const [form, setForm] = useState({
@@ -27,7 +28,7 @@ export default function EditFarmerProfileModal({ profile, onClose, onSuccess }) 
         landArea: Number(form.landArea),
       })
       .then(() => onSuccess())
-      .catch(() => alert("Failed to update profile"))
+      .catch(() => errorToast("Failed to update profile"))
       .finally(() => setSaving(false));
   };
 

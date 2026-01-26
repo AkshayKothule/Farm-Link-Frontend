@@ -3,6 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import api from "../../services/api";
 import { addDays, isWithinInterval } from "date-fns";
+import { successToast } from "../../utils/toast";
 
 export default function RentalRequestModal({ equipment, onClose }) {
   const [startDate, setStartDate] = useState(null);
@@ -42,7 +43,7 @@ export default function RentalRequestModal({ equipment, onClose }) {
       endDate: endDate.toISOString().split("T")[0],
     })
     .then(() => {
-      alert("✅ Rental request submitted");
+      successToast("✅ Rental request submitted");
       onClose();
     })
     .finally(() => setLoading(false));

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import StateDropdown from "../components/common/StateDropdown";
+import { errorToast, successToast } from "../utils/toast";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -49,10 +50,10 @@ export default function Register() {
 
     try {
       await api.post("/auth/register", form);
-      alert("Registration successful! Please login.");
+      successToast("Registration successful! Please login.");
       navigate("/auth");
     } catch (err) {
-      alert(
+      errorToast(
         err.response?.data?.message ||
           "Registration failed. Please check details."
       );

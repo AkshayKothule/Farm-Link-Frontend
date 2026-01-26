@@ -5,7 +5,9 @@ export default function Sidebar({ onLogout }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isActive = (path) =>
+  const isExact = (path) => location.pathname === path;
+
+  const isNested = (path) =>
     location.pathname === path ||
     location.pathname.startsWith(path + "/");
 
@@ -14,34 +16,46 @@ export default function Sidebar({ onLogout }) {
       <h2 className="text-2xl font-bold mb-10">🌿 FarmLink</h2>
 
       <nav className="space-y-3 text-sm font-medium">
+        {/* ✅ DASHBOARD → exact only */}
         <SidebarItem
           label="Dashboard"
-          active={isActive("/farmer")}
+          active={isExact("/farmer")}
           onClick={() => navigate("/farmer")}
         />
 
+        {/* ✅ NESTED ROUTES */}
         <SidebarItem
           label="Browse Equipment"
-          active={isActive("/farmer/equipments")}
+          active={isNested("/farmer/equipments")}
           onClick={() => navigate("/farmer/equipments")}
         />
 
         <SidebarItem
           label="My Rentals"
-          active={isActive("/farmer/rentals")}
+          active={isNested("/farmer/rentals")}
           onClick={() => navigate("/farmer/rentals")}
         />
 
         <SidebarItem
           label="Payments"
-          active={isActive("/farmer/payments")}
+          active={isNested("/farmer/payments")}
           onClick={() => navigate("/farmer/payments")}
         />
 
         <SidebarItem
-          label="Profile / Settings"
-          active={isActive("/farmer/profile") || isActive("/farmer/settings")}
+          label="Profile"
+          active={
+            isNested("/farmer/profile")
+          }
           onClick={() => navigate("/farmer/profile")}
+        />
+
+        <SidebarItem
+          label="Settings"
+          active={
+            isNested("/farmer/settings")
+          }
+          onClick={() => navigate("/farmer/settings")}
         />
       </nav>
 

@@ -1,9 +1,17 @@
 import { useState } from "react";
-import Login from "./Login";
-import Register from "./Register";
+import { useLocation } from "react-router-dom";
+import Login from "../pages/Login";
+import Register from "../pages/Register";
+
 
 export default function AuthPage() {
   const [mode, setMode] = useState("login");
+  const location = useLocation();
+
+  // 🔥 reset-password page वर AuthPageच render करू नको
+  if (location.pathname === "/reset-password") {
+    return null;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-green-50 px-4">

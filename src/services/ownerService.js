@@ -25,4 +25,10 @@ export const updateOwnerProfile = (payload) =>
 // ================= DASHBOARD =================
 
 export const getOwnerDashboardStats = () =>
-  api.get("/owner/dashboard");
+  api.get("/owner");
+
+
+
+export const getOwnerPayments = () => {
+  return api.get("/payments/owner");
+};
