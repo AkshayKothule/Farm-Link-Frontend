@@ -21,6 +21,11 @@ import OwnerPayments from "./pages/owner/OwnerPayments.jsx";
 import ResetPassword from "./pages/ResetPassword";
 import OwnerSettings from "./pages/owner/OwnerSettings.jsx";
 import { ToastContainer } from "react-toastify";
+import AdminLayout from "./pages/admin/AdminLayout.jsx";
+import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
+import AdminOwners from "./pages/admin/AdminOwners.jsx";
+import AdminReviews from "./pages/admin/AdminReviews.jsx";
+import AdminFarmers from "./pages/admin/AdminFarmers.jsx";
 // path तुझ्या project structure नुसार adjust कर
 
 // import OwnerPayments from "./pages/owner/"
@@ -33,13 +38,18 @@ function App() {
   const isOwner =
     isAuthenticated && (role === "OWNER" || role === "ROLE_OWNER");
 
+  const isAdmin =
+    isAuthenticated && (role === "ADMIN" || role === "ROLE_ADMIN");
+
   return (
     <>
       <Routes>
         {/* PUBLIC */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/auth" element={<AuthPage />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
+        {/* 🌾 FARMER */}
         <Route
           path="/farmer"
           element={isFarmer ? <FarmerLayout /> : <Navigate to="/auth" />}
@@ -65,34 +75,32 @@ function App() {
           <Route path="settings" element={<OwnerSettings />} />
         </Route>
 
-        <Route path="/reset-password" element={<ResetPassword />} />
+        {/* 🛡 ADMIN */}
+        <Route
+          path="/admin"
+          element={isAdmin ? <AdminLayout /> : <Navigate to="/auth" />}
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="owners" element={<AdminOwners />} />
+          <Route path="reviews" element={<AdminReviews />} />
+            <Route path="farmers" element={<AdminFarmers />} /> {/* ✅ */}
+
+        </Route>
       </Routes>
 
       {/* 🌈 GLOBAL TOAST */}
       <ToastContainer
         position="top-right"
         autoClose={2500}
-        hideProgressBar={false}
         newestOnTop
-        closeOnClick
         pauseOnHover
         draggable
         limit={3}
         theme="light"
-        toastStyle={{
-          borderRadius: "12px",
-          fontSize: "14px",
-          fontWeight: 500,
-        }}
-        bodyStyle={{
-          padding: "8px 4px",
-        }}
-        progressStyle={{
-          background: "linear-gradient(to right, #16a34a, #22c55e)",
-        }}
       />
     </>
   );
 }
+
 
 export default App;

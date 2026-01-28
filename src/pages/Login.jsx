@@ -33,18 +33,20 @@ export default function Login() {
       const { token, role } = res.data;
 
       dispatch(loginSuccess({ token, role }));
-      successToast("Login Succesfully!...")
+      successToast("Login Succesfully!...");
       if (role === "FARMER" || role === "ROLE_FARMER") {
         navigate("/farmer");
       } else if (role === "OWNER" || role === "ROLE_OWNER") {
         navigate("/owner");
+      } else if (role === "ADMIN" || role === "ROLE_ADMIN") {
+        navigate("/admin");
       } else {
         warningToast("Unknown role");
       }
     } catch (err) {
       errorToast(
         err.response?.data?.message ||
-          "Login failed. Please check credentials."
+          "Login failed. Please check credentials.",
       );
     }
   };
@@ -52,7 +54,6 @@ export default function Login() {
   return (
     <>
       <form onSubmit={handleLogin} className="space-y-4">
-
         {/* Email */}
         <input
           type="email"
@@ -105,9 +106,7 @@ export default function Login() {
 
       {/* 📧 RESET PASSWORD MODAL */}
       {showResetModal && (
-        <PasswordResetRequestModal
-          onClose={() => setShowResetModal(false)}
-        />
+        <PasswordResetRequestModal onClose={() => setShowResetModal(false)} />
       )}
     </>
   );

@@ -15,14 +15,17 @@ export default function FarmerLayout() {
   };
 
   return (
-    <div className="min-h-screen flex bg-green-50">
-      {/* FIXED SIDEBAR */}
+    // ✅ Full viewport height, no body scroll
+    <div className="h-screen flex overflow-hidden bg-green-50">
+      
+      {/* ✅ SIDEBAR (stable) */}
       <Sidebar onLogout={handleLogout} />
 
-      {/* DYNAMIC CONTENT */}
-      <main className="flex-1 p-6 sm:p-8">
+      {/* ✅ ONLY THIS SCROLLS */}
+      <main className="flex-1 overflow-y-auto p-6 sm:p-8">
         <Outlet />
       </main>
+
     </div>
   );
 }

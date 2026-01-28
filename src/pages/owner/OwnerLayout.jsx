@@ -14,14 +14,17 @@ export default function OwnerLayout() {
   };
 
   return (
-    <div className="min-h-screen flex bg-green-50">
-      {/* SIDEBAR */}
+    // ✅ Full viewport height, body scroll disabled
+    <div className="h-screen flex overflow-hidden bg-green-50">
+
+      {/* ✅ FIXED SIDEBAR */}
       <Sidebar onLogout={handleLogout} />
 
-      {/* MAIN CONTENT */}
-      <main className="flex-1 p-6 sm:p-8">
+      {/* ✅ ONLY MAIN CONTENT SCROLLS */}
+      <main className="flex-1 overflow-y-auto p-6 sm:p-8">
         <Outlet />
       </main>
+
     </div>
   );
 }

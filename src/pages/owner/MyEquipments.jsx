@@ -5,6 +5,7 @@ import {
 } from "../../services/equipmentService";
 import AddEquipmentModal from "../../components/modals/AddEquipmentModal";
 import { errorToast, successToast } from "../../utils/toast";
+import ImageCarousel from "../../components/common/ImageCarousel";
 
 const ITEMS_PER_PAGE = 6;
 const PLACEHOLDER = "/placeholder-equipment.jpg";
@@ -94,54 +95,40 @@ export default function MyEquipments() {
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {paginatedEquipments.map(eq => (
               <div
-                key={eq.id}
-                className="bg-white rounded-2xl shadow overflow-hidden flex flex-col"
-              >
-                {/* IMAGE */}
-                <div className="h-40 bg-gray-100 relative">
-                  <img
-                    src={
-                      eq.imageUrls?.length > 0
-                        ? eq.imageUrls[0]
-                        : PLACEHOLDER
-                    }
-                    alt={eq.name}
-                    className="w-full h-full object-cover"
-                  />
+  key={eq.id}
+  className="bg-white rounded-2xl shadow overflow-hidden flex flex-col"
+>
+  {/* IMAGE CAROUSEL */}
+  <ImageCarousel images={eq.imageUrls} />
 
-                  {eq.imageUrls?.length > 1 && (
-                    <span className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded">
-                      +{eq.imageUrls.length - 1}
-                    </span>
-                  )}
-                </div>
+  <div className="p-5 flex flex-col flex-1">
+    <h3 className="text-lg font-semibold text-green-900">
+      {eq.name}
+    </h3>
 
-                {/* CONTENT */}
-                <div className="p-5 flex flex-col flex-1">
-                  <h3 className="text-lg font-semibold text-green-900">
-                    {eq.name}
-                  </h3>
+    <p className="text-sm text-gray-500">
+      Category: {eq.category}
+    </p>
 
-                  <p className="text-sm text-gray-500">
-                    Category: {eq.category}
-                  </p>
+    <p className="mt-2 font-semibold text-green-700">
+      ₹ {eq.rentPerDay} / day
+    </p>
 
-                  <p className="mt-2 font-semibold text-green-700">
-                    ₹ {eq.rentPerDay} / day
-                  </p>
+    <span className="mt-3 inline-block text-xs font-semibold px-3 py-1
+      rounded-full bg-green-100 text-green-700 w-fit">
+      Available
+    </span>
 
-                  <span className="mt-3 inline-block text-xs font-semibold px-3 py-1 rounded-full bg-green-100 text-green-700 w-fit">
-                    Available
-                  </span>
+    <button
+      onClick={() => handleDelete(eq.id)}
+      className="mt-auto bg-red-600 text-white rounded-lg py-2
+        text-sm font-semibold hover:bg-red-700 mt-5"
+    >
+      Delete
+    </button>
+  </div>
+</div>
 
-                  <button
-                    onClick={() => handleDelete(eq.id)}
-                    className="mt-auto bg-red-600 text-white rounded-lg py-2 text-sm font-semibold hover:bg-red-700 mt-5"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
             ))}
           </div>
 

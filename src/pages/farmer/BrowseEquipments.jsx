@@ -41,7 +41,7 @@ export default function BrowseEquipments() {
   };
 
   return (
-    <div className="min-h-screen bg-green-50 p-6 sm:p-8">
+    <div className=" bg-green-50 p-6 sm:p-8">
 
       {/* ===== HEADER CARD ===== */}
       <div className="bg-white rounded-2xl shadow p-6 mb-8">
